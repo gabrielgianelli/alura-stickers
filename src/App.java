@@ -1,4 +1,5 @@
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -19,10 +20,15 @@ public class App {
         var parser = new JsonParser();
         List<Map<String, String>> listOfMovies = parser.parse(body);
         // show and manipulate data
+        var stickerGenerator = new StickerGenerator();
         for (Map<String,String> movie : listOfMovies) {
-            System.out.println(movie.get("title"));
-            System.out.println(movie.get("image"));
-            System.out.println(movie.get("imDbRating"));
+            var title = movie.get("title");
+            var filename = "output/" + title + ".png";
+            var imageURL = movie.get("image");
+            var inputStream = new URL(imageURL).openStream();
+            stickerGenerator.create(inputStream, filename);
+            System.out.println(title);
+            System.out.println();
         }
     }
 }
